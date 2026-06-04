@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Untuk Kevin 🐾</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-50: #e6f1fb;
+    --blue-100: #b5d4f4;
+    --blue-200: #85b7eb;
+    --blue-400: #378add;
+    --blue-500: #2473c4;
+    --blue-600: #185fa5;
+    --blue-700: #0e4a84;
+    --blue-800: #0c447c;
+    --white: #ffffff;
+    --gray-100: #f5f7fa;
+    --gray-200: #e8ecf2;
+    --gray-400: #9aa3b2;
+    --gray-600: #6b7585;
+    --text-dark: #1a2638;
+    --text-mid: #3d5068;
+    --text-light: #6b7585;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(160deg, #dbeeff 0%, #eef5ff 40%, #f0f7ff 100%);
+    min-height: 100vh;
+    color: var(--text-dark);
+  }
+
+  .site-header {
+    text-align: center;
+    padding: 3rem 1.5rem 2rem;
+  }
+
+  .cat-emoji {
+    font-size: 3.2rem;
+    display: inline-block;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .site-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    font-weight: 800;
+    color: var(--blue-700);
+    margin-top: 0.5rem;
+    letter-spacing: -0.5px;
+  }
+
+  .site-subtitle {
+    font-family: 'Lora', serif;
+    font-style: italic;
+    color: var(--blue-600);
+    font-size: 1rem;
+    margin-top: 0.4rem;
+  }
+
+  .paw-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin: 1.5rem auto 0;
+    color: var(--blue-400);
+    font-size: 1.1rem;
+    opacity: 0.6;
+  }
+
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    max-width: 900px;
+    margin: 2rem auto 4rem;
+    padding: 0 1.5rem;
+  }
+
+  .day-card {
+    background: var(--white);
+    border-radius: 16px;
+    border: 1.5px solid var(--blue-100);
+    padding: 1.2rem 1.4rem;
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .day-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: var(--blue-400);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .day-card.unlocked:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(55, 138, 221, 0.18);
+    border-color: var(--blue-200);
+  }
+
+  .day-card.unlocked:hover::before { opacity: 1; }
+
+  .day-card.locked {
+    background: var(--gray-100);
+    border-color: var(--gray-200);
+    cursor: default;
+    opacity: 0.7;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.7rem;
+  }
+
+  .card-date {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--blue-600);
+    letter-spacing: 0.3px;
+    text-transform: uppercase;
+  }
+
+  .card-lock { font-size: 1rem; }
+
+  .card-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 0.25rem;
+  }
+
+  .card-desc {
+    font-size: 0.82rem;
+    color: var(--text-light);
+  }
+
+  .card-tag {
+    display: inline-block;
+    margin-top: 0.7rem;
+    background: var(--blue-50);
+    color: var(--blue-600);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .locked .card-title,
+  .locked .card-desc { color: var(--gray-400); }
+
+  .locked .card-tag {
+    background: var(--gray-200);
+    color: var(--gray-400);
+  }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 35, 70, 0.45);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .modal-backdrop.open {
+    display: flex;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .modal-box {
+    background: var(--white);
+    border-radius: 20px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+    position: relative;
+    animation: slideUp 0.25s ease;
+  }
+
+  @keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: var(--blue-50);
+    border: none;
+    border-radius: 50%;
+    width: 34px; height: 34px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    color: var(--blue-600);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s;
+  }
+
+  .modal-close:hover { background: var(--blue-100); }
+
+  .modal-date-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--blue-400);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.4rem;
+  }
+
+  .modal-title {
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--blue-800);
+    margin-bottom: 1.2rem;
+  }
+
+  .letter-body {
+    font-family: 'Lora', serif;
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--text-mid);
+  }
+
+  .letter-body p { margin-bottom: 0.9rem; }
+  .letter-body p:last-child { margin-bottom: 0; }
+
+  .letter-sign {
+    margin-top: 1.5rem;
+    font-family: 'Lora', serif;
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--blue-600);
+  }
+
+  .quiz-question {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .quiz-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .quiz-btn {
+    background: var(--blue-50);
+    border: 1.5px solid var(--blue-100);
+    border-radius: 10px;
+    padding: 0.65rem 1rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.15s, border-color 0.15s;
+  }
+
+  .quiz-btn:hover:not(:disabled) { background: var(--blue-100); border-color: var(--blue-200); }
+
+  .quiz-btn.correct {
+    background: #e6f4ea;
+    border-color: #69bb87;
+    color: #1e6b3e;
+  }
+
+  .quiz-btn.wrong {
+    background: #fdecea;
+    border-color: #e88080;
+    color: #842020;
+  }
+
+  .quiz-result {
+    display: none;
+    margin-top: 1rem;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .quiz-result.show { display: block; }
+  .quiz-result.win { background: #e6f4ea; color: #1e6b3e; }
+  .quiz-result.lose { background: #fdecea; color: #842020; }
+
+  .clap-section {
+    display: none;
+    margin-top: 1.2rem;
+    text-align: center;
+  }
+
+  .clap-section.show { display: block; }
+
+  .clap-cat {
+    font-size: 2.8rem;
+    display: inline-block;
+    animation: bounce 0.5s ease infinite alternate;
+  }
+
+  @keyframes bounce {
+    from { transform: translateY(0) scale(1); }
+    to { transform: translateY(-8px) scale(1.1); }
+  }
+
+  .clap-text {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--blue-700);
+    margin-top: 0.5rem;
+    line-height: 1.6;
+  }
+
+  .clap-stars {
+    font-size: 1.4rem;
+    letter-spacing: 4px;
+    margin-top: 0.3rem;
+    animation: pulse 1s ease infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .site-footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    opacity: 0.7;
+  }
+
+  .modal-box::-webkit-scrollbar { width: 6px; }
+  .modal-box::-webkit-scrollbar-track { background: var(--blue-50); border-radius: 10px; }
+  .modal-box::-webkit-scrollbar-thumb { background: var(--blue-200); border-radius: 10px; }
+
+  @media (max-width: 480px) {
+    .modal-box { padding: 1.5rem; }
+    .site-header { padding: 2rem 1rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="cat-emoji">🐱</div>
+  <h1 class="site-title">Untuk Kevin</h1>
+  <p class="site-subtitle">Setiap hari ada sesuatu yang bisa dibuka.</p>
+  <div class="paw-divider">🐾 &mdash; dari Nana &mdash; 🐾</div>
+</header>
+
+<main class="timeline-grid" id="timeline">
+
+  <div class="day-card unlocked" onclick="openModal('day1')">
+    <div class="card-top">
+      <span class="card-date">03 Juni 2026</span>
+      <span class="card-lock">🔓</span>
+    </div>
+    <div class="card-title">Hari 1</div>
+    <div class="card-desc">Ada sesuatu yang mau Nana bilang.</div>
+    <span class="card-tag">💌 Surat</span>
+  </div>
+
+  <div class="day-card unlocked" onclick="openModal('day2')">
+    <div class="card-top">
+      <span class="card-date">04 Juni 2026</span>
+      <span class="card-lock">🔓</span>
+    </div>
+    <div class="card-title">Hari 2</div>
+    <div class="card-desc">Kamu kenal diri sendiri kan?</div>
+    <span class="card-tag">🎮 Game</span>
+  </div>
+
+  <div class="day-card unlocked" onclick="openModal('day3')">
+    <div class="card-top">
+      <span class="card-date">05 Juni 2026</span>
+      <span class="card-lock">🔓</span>
+    </div>
+    <div class="card-title">Hari 3</div>
+    <div class="card-desc">Coba tebak kalau bisa.</div>
+    <span class="card-tag">🧩 Tebak-tebakan</span>
+  </div>
+
+  <div class="day-card locked" onclick="openModal('locked')">
+    <div class="card-top">
+      <span class="card-date">06 Juni 2026</span>
+      <span class="card-lock">🔒</span>
+    </div>
+    <div class="card-title">Hari 4</div>
+    <div class="card-desc">Belum bisa dibuka.</div>
+    <span class="card-tag">🔒 Terkunci</span>
+  </div>
+
+  <div class="day-card locked" onclick="openModal('locked')">
+    <div class="card-top">
+      <span class="card-date">07 Juni 2026</span>
+      <span class="card-lock">🔒</span>
+    </div>
+    <div class="card-title">Hari 5</div>
+    <div class="card-desc">Belum bisa dibuka.</div>
+    <span class="card-tag">🔒 Terkunci</span>
+  </div>
+
+  <div class="day-card locked" onclick="openModal('locked')">
+    <div class="card-top">
+      <span class="card-date">08 Juni 2026</span>
+      <span class="card-lock">🔒</span>
+    </div>
+    <div class="card-title">Hari 6</div>
+    <div class="card-desc">Belum bisa dibuka.</div>
+    <span class="card-tag">🔒 Terkunci</span>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  🐾 Dibuat dengan sabar untuk Kevin &mdash; 2026
+</footer>
+
+<div class="modal-backdrop" id="modalBackdrop" onclick="closeOnBackdrop(event)">
+  <div class="modal-box" id="modalBox">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<script>
+const days = {
+
+  day1: `
+    <div class="modal-date-label">03 Juni 2026 &middot; Hari 1</div>
+    <div class="modal-title">Halo, Kevin 🐾</div>
+    <div class="letter-body">
+      <p>Hari ini kamu presentasi, dan aku tahu kamu bisa.</p>
+      <p>Aku bikin tempat kecil ini biar setiap hari ada sesuatu yang bisa dibuka.
+         Kadang isinya pesan biasa, kadang game, kadang sesuatu yang random —
+         tapi semuanya khusus buat kamu.</p>
+      <p>Jadi buka terus ya, satu per hari.</p>
+    </div>
+    <div class="letter-sign">— Nana</div>
+  `,
+
+  day2: `
+    <div class="modal-date-label">04 Juni 2026 &middot; Hari 2</div>
+    <div class="modal-title">Kamu kenal diri sendiri? 🎮</div>
+    <div class="quiz-question">Waktu kecil, kamu itu lebih sering...</div>
+    <div class="quiz-options">
+      <button class="quiz-btn" onclick="answer2(this, false, 'A')">A. Diam di rumah, main sendiri, anteng</button>
+      <button class="quiz-btn" onclick="answer2(this, false, 'B')">B. Lari-larian di luar, ribut, susah disuruh masuk</button>
+      <button class="quiz-btn" onclick="answer2(this, true, 'C')">C. Campuran — tergantung mood</button>
+      <button class="quiz-btn" onclick="answer2(this, false, 'D')">D. Tidur. Dari dulu emang suka tidur.</button>
+    </div>
+    <div class="quiz-result" id="quizResult2"></div>
+    <div class="clap-section" id="clapSection">
+      <div class="clap-cat">🐱</div>
+      <div class="clap-stars">⭐⭐⭐</div>
+      <div class="clap-text">
+        Tepuk wow dulu.<br>
+        Kamu kerja keras hari ini dan itu kelihatan.<br>
+        Istirahat yang bener ya.
+      </div>
+    </div>
+  `,
+
+  day3: `
+    <div class="modal-date-label">05 Juni 2026 &middot; Hari 3</div>
+    <div class="modal-title">Tebak-tebakan 🧩</div>
+    <div id="riddleArea">
+      <div class="quiz-question" id="riddleText">Soal 1 dari 5<br><br>Aku selalu ada di langit malam, tapi tak pernah terlihat di siang hari. Aku bersinar, tapi bukan lampu. Siapakah aku?</div>
+      <input id="riddleInput" type="text" placeholder="Jawaban kamu..." style="width:100%;padding:0.65rem 1rem;border-radius:10px;border:1.5px solid var(--blue-100);font-family:Nunito,sans-serif;font-size:0.95rem;margin-bottom:0.7rem;outline:none;color:var(--text-dark);background:var(--blue-50);" />
+      <button onclick="checkRiddle()" style="width:100%;padding:0.65rem;border-radius:10px;border:none;background:var(--blue-400);color:#fff;font-family:Nunito,sans-serif;font-weight:700;font-size:0.95rem;cursor:pointer;">Cek Jawaban</button>
+      <div id="riddleFeedback" style="display:none;margin-top:0.8rem;padding:0.8rem 1rem;border-radius:10px;font-weight:700;font-size:0.9rem;"></div>
+    </div>
+    <div id="riddleDone" style="display:none;text-align:center;padding:1rem 0;">
+      <div style="font-size:2.5rem;animation:bounce 0.5s ease infinite alternate;">🐱</div>
+      <div style="font-size:1.3rem;letter-spacing:4px;margin:0.4rem 0;">⭐⭐⭐⭐⭐</div>
+      <div style="font-family:Nunito,sans-serif;font-weight:700;color:var(--blue-700);margin-top:0.5rem;line-height:1.7;">Semua benar!<br>Otak kamu masih jalan dengan baik rupanya.</div>
+    </div>
+    <script>
+      var riddleList = [
+        { soal: "Soal 1 dari 5\\n\\nAku selalu ada di langit malam, tapi tak pernah terlihat di siang hari. Aku bersinar, tapi bukan lampu. Siapakah aku?", jawaban: "bintang" },
+        { soal: "Soal 2 dari 5\\n\\nAku adalah bagian dari tubuhmu, tapi tak pernah bergerak sendiri. Aku membantu kau menggigit. Siapakah aku?", jawaban: "gigi" },
+        { soal: "Soal 3 dari 5\\n\\nAku tak hidup, tapi aku bisa bergerak jika kau sentuh. Aku ada di setiap rumah. Siapakah aku?", jawaban: "pintu" },
+        { soal: "Soal 4 dari 5\\n\\nAku kecil, tapi bisa membuatmu menangis. Aku bukan makhluk hidup. Siapakah aku?", jawaban: "bawang" },
+        { soal: "Soal 5 dari 5\\n\\nAku selalu basah, meski tak pernah kena air. Aku ada di tubuhmu. Siapakah aku?", jawaban: "lidah" }
+      ];
+      var riddleIndex = 0;
+      function checkRiddle() {
+        var input = document.getElementById('riddleInput');
+        var feedback = document.getElementById('riddleFeedback');
+        var jawaban = input.value.trim().toLowerCase();
+        var benar = riddleList[riddleIndex].jawaban;
+        if (jawaban === benar) {
+          feedback.style.display = 'block';
+          feedback.style.background = '#e6f4ea';
+          feedback.style.color = '#1e6b3e';
+          feedback.textContent = 'Benar! Jawaban: ' + benar.charAt(0).toUpperCase() + benar.slice(1);
+          riddleIndex++;
+          setTimeout(function() {
+            if (riddleIndex < riddleList.length) {
+              document.getElementById('riddleText').innerHTML = riddleList[riddleIndex].soal.replace('\\n\\n', '<br><br>');
+              input.value = '';
+              feedback.style.display = 'none';
+            } else {
+              document.getElementById('riddleArea').style.display = 'none';
+              document.getElementById('riddleDone').style.display = 'block';
+            }
+          }, 1000);
+        } else {
+          feedback.style.display = 'block';
+          feedback.style.background = '#fdecea';
+          feedback.style.color = '#842020';
+          feedback.textContent = 'Belum tepat. Coba lagi.';
+        }
+      }
+      document.getElementById('riddleInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') checkRiddle();
+      });
+    <\/script>
+  `,
+
+  locked: `
+    <div class="modal-date-label">Belum Waktunya</div>
+    <div class="modal-title">🔒 Masih Terkunci</div>
+    <div class="letter-body">
+      <p>Hari ini belum dibuka. Coba lagi besok.</p>
+    </div>
+  `
+};
+
+function openModal(id) {
+  const content = days[id];
+  if (!content) return;
+  document.getElementById('modalContent').innerHTML = content;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+}
+
+function closeOnBackdrop(e) {
+  if (e.target === document.getElementById('modalBackdrop')) closeModal();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+function answer2(btn, isCorrect, pilihan) {
+  const allBtns = btn.parentElement.querySelectorAll('.quiz-btn');
+  allBtns.forEach(b => b.disabled = true);
+  const result = document.getElementById('quizResult2');
+  const clap = document.getElementById('clapSection');
+  if (!result) return;
+
+  const respon = {
+    A: { correct: false, text: 'Anak anteng ya ternyata. Tapi tetap aja susah ditebak.' },
+    B: { correct: false, text: 'Wah, ribut dari kecil rupanya. Pantesan.' },
+    C: { correct: true,  text: 'Orang yang bisa adaptasi dari kecil biasanya yang paling susah dibaca — tapi juga yang paling menarik.' },
+    D: { correct: false, text: 'Dari dulu prioritasnya sudah benar ternyata.' }
+  };
+
+  const r = respon[pilihan];
+  btn.classList.add(r.correct ? 'correct' : 'wrong');
+  result.className = 'quiz-result show ' + (r.correct ? 'win' : 'lose');
+  result.textContent = r.text;
+  if (clap) clap.classList.add('show');
+}
+</script>
+
+</body>
+</html>
